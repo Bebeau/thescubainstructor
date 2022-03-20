@@ -9,9 +9,11 @@ class Newsletter extends React.Component {
     this.state = {
       email: '',
       error: null, 
-      errorInfo: null
+      errorInfo: null,
+      emailMessage: ""
     }
     this.onEmailChange = this.onEmailChange.bind(this);
+    this.onNesletterSubmit = this.onNesletterSubmit.bind(this);
   }
   componentDidCatch(error, errorInfo) {
     this.setState({
@@ -24,10 +26,43 @@ class Newsletter extends React.Component {
       email: event.target.value
     });
   }
+  onNesletterSubmit(event) {
+    event.preventDefault();
+    let formData = {
+      email: this.state.email,
+      status: 'subscribed'
+    }
+    fetch('/newsletter', {
+      method: 'POST',
+      headers: {
+        'Accept':'application/json',
+        'Content-type':'application/json'
+      },
+      body: JSON.stringify(formData)
+    })
+    .then((res) => {  
+      return res.json() 
+    })
+    .then((res) => {
+      if(!Object.keys(res).length) {
+        this.setState({
+          email: '',
+          emailMessageTitle: 'Thank you for joining!',
+          emailMessageDetails: 'You have been successfully subscribed to The Scuba Instructor\'s newsletter.'
+        });
+      }
+      if(res.statusCode === 400) {
+        this.setState({
+          emailMessageTitle: res.title,
+          emailMessageDetails: res.detail
+        });
+      }
+    })
+    .catch(function(err) {
+       console.log(err);
+    });
+  }
   render() {
-    const {
-      email
-    } = this.state;
     return (
       <section id="newsletter">
 
@@ -43,25 +78,23 @@ class Newsletter extends React.Component {
               To follow The SCUBA Instructor’s adventures in the Pacific Northwest or the Bay Islands or to learn more about getting certified, join our SCUBA community.
             </p>
             <div id="email">
-              <form action="https://theinitgroup.us8.list-manage.com/subscribe/post" method="post" noValidate>
-                <input type="hidden" name="u" defaultValue="90fe8a5a3c8ffa0a87fe70260"/>
-                <input type="hidden" name="id" defaultValue="63e97a57b2"/>
-                <input 
+              <form onSubmit={this.onNesletterSubmit}>
+              <input 
                   type="email" 
-                  name="EMAIL" 
-                  className="required email" 
-                  id="mce-EMAIL"
+                  name="email" 
+                  className="required email"
                   placeholder="email@address.."
-                  value={email} 
+                  value={this.state.email} 
                   onChange={this.onEmailChange}
                 />
-                <div className="hiddenInput" aria-hidden="true">
-                  <input type="text" name="b_90fe8a5a3c8ffa0a87fe70260_63e97a57b2" tabIndex="-1" defaultValue="" />
-                </div>
                 <button type="submit" className="newsletter-btn">
                   Join
                 </button>
               </form>
+            </div>
+            <div className="newsletterMessage">
+              <h5>{this.state.emailMessageTitle}</h5>
+              <p>{this.state.emailMessageDetails}</p>
             </div>
           </div>
 

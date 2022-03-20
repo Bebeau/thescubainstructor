@@ -173,6 +173,15 @@ img {
       bottom: 0;
       background: #FC8363;
       border-radius: 0 50px 50px 0; }
+  #newsletter .newsletterMessage {
+    padding: 20px; }
+    #newsletter .newsletterMessage h5 {
+      margin: 0;
+      color: #253570; }
+    #newsletter .newsletterMessage p {
+      margin: 10px 0 0;
+      font-size: 1rem;
+      line-height: normal; }
 
 #faqs {
   background: url("../img/scuba-bg.jpg") no-repeat scroll top center/contain #253570;
@@ -194,26 +203,28 @@ img {
         letter-spacing: 0.5px;
         transition: all 1s ease-in-out; }
         #faqs .copy .faqList li.open {
-          color: white;
           font-weight: lighter;
-          transition: all 0.5s ease-in-out;
-          text-shadow: 0 0 5px rgba(0, 0, 0, 0.3); }
+          transition: all 0.5s ease-in-out; }
           #faqs .copy .faqList li.open .question {
-            color: #2DBCB1; }
+            color: #FFFEF0;
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.3); }
             #faqs .copy .faqList li.open .question:hover {
-              color: #2DBCB1; }
+              color: #FFFEF0; }
           #faqs .copy .faqList li.open .answer {
-            color: white;
+            color: #253570;
+            background: #FFFEF0;
+            padding: 20px;
+            border-radius: 5px;
             max-height: 2000px;
             transition: max-height 2s ease-in-out; }
             #faqs .copy .faqList li.open .answer ul {
               margin-bottom: 20px; }
               #faqs .copy .faqList li.open .answer ul li {
-                color: #FFFEF0; }
+                color: #253570; }
         #faqs .copy .faqList li .question {
           font-size: 1.2rem;
           font-weight: 600;
-          color: #FFFEF0;
+          color: #9187A0;
           transition: all 0.3s ease-in-out; }
           #faqs .copy .faqList li .question:hover {
             color: #FC8363;

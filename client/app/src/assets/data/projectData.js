@@ -53,7 +53,7 @@ export const faqs = [
 	},
 	{
 		"question": "What if I’m not interested in diving in cold water?",
-		"answer": "f you’d rather stay away from cold water, try a referral course*. This is an all-inclusive package, where you start at a local pool session to learn theory and eventually travel to warmer waters to do your ocean dives. (*This incurs additional travel fees.)"
+		"answer": "If you’d rather stay away from cold water, try a referral course*. This is an all-inclusive package, where you start at a local pool session to learn theory and eventually travel to warmer waters to do your ocean dives. (*This incurs additional travel fees.)"
 	},
 	{
 		"question": "Do I need to have my own gear?",

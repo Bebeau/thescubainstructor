@@ -35,15 +35,15 @@ class Faqs extends React.Component {
                 </div>
                 <div className="answer">
                   {faq.answer}
-                  <ul>
-                    {faq.bullets ? ( 
-                      faq.bullets.map((data, index) => {
+                  {faq.bullets ? ( 
+                    <ul>
+                      {faq.bullets.map((data, index) => {
                         return (
                           <li key={index}>{data}</li>
                         );
-                      })
-                    ): null }
-                  </ul>
+                      })}
+                    </ul> 
+                  ): null }
                 </div>
               </li>
             ): null}

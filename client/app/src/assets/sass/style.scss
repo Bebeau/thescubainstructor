@@ -227,6 +227,18 @@ img {
 			border-radius: 0 50px 50px 0;
 		}
 	}
+	.newsletterMessage {
+		padding: 20px;
+		h5 {
+			margin: 0;
+			color: $blue;
+		}
+		p {
+			margin: 10px 0 0;
+			font-size: 1rem;
+			line-height: normal;
+		}
+	}
 }
 
 #faqs {
@@ -250,24 +262,26 @@ img {
 				letter-spacing: 0.5px;
 				transition: all 1s ease-in-out;
 				&.open {
-					color: white;
 					font-weight: lighter;
 					transition: all 0.5s ease-in-out;
-					text-shadow: 0 0 5px rgba(0,0,0,0.3);
 					.question {
-						color: $teal;
+						color: $sand;
+						text-shadow: 0 0 5px rgba(0,0,0,0.3);
 						&:hover {
-							color: $teal;
+							color: $sand;
 						}
 					}
 					.answer {
-						color: white;
+						color: $blue;
+						background: $sand;
+						padding: 20px;
+						border-radius: 5px;
 						max-height: 2000px;
 						transition: max-height 2s ease-in-out;
 						ul {
 							margin-bottom: 20px;
 							li {
-								color: $sand;
+								color: $blue;
 							}
 						}
 					}
@@ -275,7 +289,7 @@ img {
 				.question {
 					font-size: 1.2rem;
 					font-weight: 600;
-					color: $sand;
+					color: $grey;
 					transition: all 0.3s ease-in-out;
 					&:hover {
 						color: $orange;

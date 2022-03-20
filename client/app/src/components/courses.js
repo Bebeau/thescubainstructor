@@ -46,7 +46,7 @@ class Courses extends React.Component {
             </ul>
             <div className="videoWrap">
               <div className="videoRatio">
-                <video controls preload="auto" autoPlay defaultMuted>
+                <video controls preload="auto" autoPlay muted>
                   <source src={videoUrl} type="video/mp4" />
                 </video>
               </div>
