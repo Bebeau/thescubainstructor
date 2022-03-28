@@ -1,5 +1,12 @@
 import React from 'react';
 
+import {
+  parseIncompletePhoneNumber,
+  Metadata,
+  isPossiblePhoneNumber,
+  parsePhoneNumber
+} from 'libphonenumber-js'
+
 class Modal extends React.Component {
   // define initial states and bind functions
   constructor(props) {
@@ -8,124 +15,138 @@ class Modal extends React.Component {
       firstName: '',
       lastName: '',
       email: '',
-      phone: '',
+      phoneNumber: '',
+      date: '',
       course: ''
     }
-    this.onFirstNameChange = this.onFirstNameChange.bind(this);
-    this.onLastNameChange = this.onLastNameChange.bind(this);
-    this.onEmailChange = this.onEmailChange.bind(this);
+    this.onFieldChange = this.onFieldChange.bind(this);
     this.onPhoneChange = this.onPhoneChange.bind(this);
-    this.onDateChange = this.onDateChange.bind(this);
-    this.onCourseChange = this.onCourseChange.bind(this);
-    this.hasValue = this.hasValue.bind(this);
+    this.onInquirySubmit = this.onInquirySubmit.bind(this);
   }
-  onFirstNameChange(event) {
-    this.hasValue(event.target);
-    this.setState({
-      firstName: event.target.value
+  onFieldChange(event) {
+    this.setState({ 
+      [event.target.name]: event.target.value 
     });
-  }
-  onLastNameChange(event) {
-    this.hasValue(event.target);
-    this.setState({
-      lastName: event.target.value
-    });
-  }
-  onEmailChange(event) {
-    this.hasValue(event.target);
-    this.setState({
-      email: event.target.value
-    });
+    this.fieldHasValue(event.target);
   }
   onPhoneChange(event) {
-    this.hasValue(event.target);
+    let code = 'US',
+      number = parseIncompletePhoneNumber(event.target.value, code),
+      limit = new Metadata().metadata.countries[code][3].slice(-1)[0];
+
+      if(number.length > limit) {
+          number = number.substring(0,limit);
+        }
+
+      let isPossible = isPossiblePhoneNumber(number, code);
+      if(isPossible) {
+        number = parsePhoneNumber(number, code).format("NATIONAL");
+        this.fieldHasValue(event.target);
+      }
+
     this.setState({
-      phone: event.target.value
+      phoneNumber: number,
+      isPossibleNumber: isPossible
     });
   }
-  onDateChange(event) {
-    this.hasValue(event.target);
-    this.setState({
-      date: event.target.value
-    });
-  }
-  onCourseChange(event) {
-    this.hasValue(event.target);
-    this.setState({
-      course: event.target.value
-    });
-  }
-  hasValue(el) {
+  fieldHasValue(el) {
     if(el.value) {
       el.classList.add("filled");
     } else {
       el.classList.remove("filled");
     }
   }
+  onInquirySubmit(event) {
+    event.preventDefault();
+    let formData = {
+      firstName: this.state.firstName,
+      lastName: this.state.lastName,
+      email: this.state.email,
+      phone: this.state.phoneNumber,
+      date: this.state.date,
+      course: this.state.course,
+      status: 'subscribed'
+    }
+    fetch('/submitRequest', {
+      method: 'POST',
+      headers: {
+        'Accept':'application/json',
+        'Content-type':'application/json'
+      },
+      body: JSON.stringify(formData)
+    })
+    .then((res) => {  
+      return res.json() 
+    })
+    .then((res) => {
+      // console.log("SUCCESS!!!!");
+    })
+    .catch(function(err) {
+       // console.log(err);
+    });
+  }
   render() {
-    const {
-      firstName,
-      lastName,
-      email,
-      phone,
-      date,
-      course
-    } = this.state;
     return (
       <section id="modal">
         <div className="imagePlaceholder"></div>
         <div className="formWrap">
           <button className="close" onClick={this.props.close}></button>
-          <form action="" method="post">
+          <form onSubmit={this.onInquirySubmit}>
             <input 
               type="text" 
               name="firstName" 
               placeholder="First Name" 
-              value={firstName}
-              onChange={this.onFirstNameChange}
+              value={this.state.firstName}
+              onChange={this.onFieldChange}
               autoComplete="off"
+              className="field"
             />
             <input 
               type="text" 
               name="lastName" 
               placeholder="Last Name"
-              value={lastName}
-              onChange={this.onLastNameChange}
+              value={this.state.lastName}
+              onChange={this.onFieldChange}
               autoComplete="off"
+              className="field"
             />
             <input 
               type="email" 
               name="email" 
               placeholder="Email"
-              value={email}
-              onChange={this.onEmailChange}
+              value={this.state.email}
+              onChange={this.onFieldChange}
               autoComplete="off"
+              className="field"
             />
             <input 
               type="tel" 
               name="phone" 
               placeholder="Phone"
-              value={phone}
+              value={this.state.phoneNumber}
               onChange={this.onPhoneChange}
               autoComplete="off"
+              className="field"
             />
             <input 
               type="text" 
               name="date" 
               placeholder="Desired Date"
-              value={date}
-              onChange={this.onDateChange}
+              value={this.state.date}
+              onChange={this.onFieldChange}
               autoComplete="off"
+              className="field"
             />
             <input 
               type="text" 
-              name="package" 
-              placeholder="Dive Package"
-              value={course}
-              onChange={this.onCourseChange}
+              name="course" 
+              placeholder="Dive Course"
+              value={this.state.course}
+              onChange={this.onFieldChange}
               autoComplete="off"
+              className="field"
             />
-            <button type="submit" className="">
+            <button type="submit">
               Send
             </button>
           </form>

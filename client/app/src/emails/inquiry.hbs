@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>The Scuba Instructor Booking Inquiry</title>
+    </head>
+    <style>
+        body {
+            background:  #082d74;
+            max-width: 600px;
+            display: block;
+            margin: 0 auto;
+            padding: 50px 20px;
+            box-sizing: border-box;
+        }
+        header {
+            margin-bottom: 20px;
+        }
+        h1 {
+            margin-top: 0;
+        }
+        .lead {
+            font-size: 1.6rem;
+        }
+        #emailWrap {
+            background: white;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        a {
+            text-decoration:  none;
+            color: #2dbcb1;
+        }
+        #emailInfo .field {
+            background: #f3f3f3;
+            padding: 10px;
+            margin: 5px 0;
+        }
+        #emailInfo .label {
+            font-size: 0.6rem;
+            letter-spacing: 1px;
+            margin-bottom: 3px;
+        }
+        #emailInfo .value {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        table tr td {
+            padding: 10px;
+        }
+    </style>
+    <body>
+        <header>
+             <img width="150px" src="https://mcusercontent.com/90fe8a5a3c8ffa0a87fe70260/images/6053d03d-8492-3598-83d9-eed8903d057f.png" alt="The Scuba Instructor" />
+        </header>
+        <div id="emailWrap">
+            <h1>We found another diver!</h1>
+            <p class="lead">Someone is interested in taking a course with The Scuba Instructor. Keep up the great work!</p>
+            <div id="emailInfo">
+                <div class="field">
+                    <div class="label">NAME:</div>
+                    <div class="value">{{firstName}} {{lastName}}</div>
+                </div>
+                <div class="field">
+                    <div class="label">EMAL:</div>
+                    <div class="value"><a href="mailto:{{email}}">{{email}}</a></div>
+                </div>
+                <div class="field">
+                    <div class="label">PHONE:</div>
+                    <div class="value"><a href="tel:{{phone}}">{{phone}}</a></div>
+                </div>
+                <div class="field">
+                    <div class="label">DATES:</div>
+                    <div class="value">{{date}}</div>
+                </div>
+                <div class="field">
+                    <div class="label">COURSE:</div>
+                    <div class="value">{{course}}</div>
+                </div>
+            </div>
+        </div>
+        <footer>
+
+        </footer>
+    </body>
+</html>

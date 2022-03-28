@@ -40,11 +40,8 @@ class Homepage extends React.Component {
     });
   }
   render() {
-    const {
-      modal
-    } = this.state;
     return (
-      <div id="page" className={modal  ? 'in': ''}>
+      <div id="page" className={this.state.modal  ? 'in': ''}>
         <div id="splash">
 
           <section id="hero">
