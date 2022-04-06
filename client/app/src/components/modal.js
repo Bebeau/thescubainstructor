@@ -17,11 +17,16 @@ class Modal extends React.Component {
       email: '',
       phoneNumber: '',
       date: '',
-      course: ''
+      course: '',
+      responseSuccess: false,
+      responseTitle: '',
+      responseDetails: ''
     }
     this.onFieldChange = this.onFieldChange.bind(this);
     this.onPhoneChange = this.onPhoneChange.bind(this);
     this.onInquirySubmit = this.onInquirySubmit.bind(this);
+    this.clearResponse = this.clearResponse.bind(this);
+    this.checkRequiredFields = this.checkRequiredFields.bind(this);
   }
   onFieldChange(event) {
     this.setState({ 
@@ -35,8 +40,8 @@ class Modal extends React.Component {
       limit = new Metadata().metadata.countries[code][3].slice(-1)[0];
 
       if(number.length > limit) {
-          number = number.substring(0,limit);
-        }
+        number = number.substring(0,limit);
+      }
 
       let isPossible = isPossiblePhoneNumber(number, code);
       if(isPossible) {
@@ -56,8 +61,51 @@ class Modal extends React.Component {
       el.classList.remove("filled");
     }
   }
+  checkRequiredFields() {
+    if(!this.state.firstName) {
+      this.setState({
+        formMessage: "Enter first name."
+      });
+      return false;
+    }
+    if(!this.state.lastName) {
+      this.setState({
+        formMessage: "Enter last name."
+      });
+      return false;
+    }
+    if(!this.state.email) {
+      this.setState({
+        formMessage: "Enter a valid email address."
+      });
+      return false;
+    }
+    if(!this.state.phoneNumber) {
+      this.setState({
+        formMessage: "Enter a valid phone number."
+      });
+      return false;
+    }
+    if(!this.state.date) {
+      this.setState({
+        formMessage: "Enter desired dive dates."
+      });
+      return false;
+    }
+    if(!this.state.course) {
+      this.setState({
+        formMessage: "Enter desired dive course."
+      });
+      return false;
+    }
+    return true;
+  }
   onInquirySubmit(event) {
     event.preventDefault();
+    const errorCheck = this.checkRequiredFields();
+    if(!errorCheck) {
+      return;
+    }
     let formData = {
       firstName: this.state.firstName,
       lastName: this.state.lastName,
@@ -79,10 +127,27 @@ class Modal extends React.Component {
       return res.json() 
     })
     .then((res) => {
-      // console.log("SUCCESS!!!!");
+      this.setState({
+        firstName: '',
+        lastName: '',
+        email: '',
+        phoneNumber: '',
+        date: '',
+        course: '',
+        responseSuccess: true,
+        responseTitle: res.title,
+        responseDetails: res.detail
+      });
     })
     .catch(function(err) {
-       // console.log(err);
+      console.log(err);
+    });
+  }
+  clearResponse() {
+    this.setState({
+      responseSuccess: false,
+      responseTitle: "",
+      responseDetails: ""
     });
   }
   render() {
@@ -91,65 +156,78 @@ class Modal extends React.Component {
         <div className="imagePlaceholder"></div>
         <div className="formWrap">
           <button className="close" onClick={this.props.close}></button>
-          <form onSubmit={this.onInquirySubmit}>
-            <input 
-              type="text" 
-              name="firstName" 
-              placeholder="First Name" 
-              value={this.state.firstName}
-              onChange={this.onFieldChange}
-              autoComplete="off"
-              className="field"
-            />
-            <input 
-              type="text" 
-              name="lastName" 
-              placeholder="Last Name"
-              value={this.state.lastName}
-              onChange={this.onFieldChange}
-              autoComplete="off"
-              className="field"
-            />
-            <input 
-              type="email" 
-              name="email" 
-              placeholder="Email"
-              value={this.state.email}
-              onChange={this.onFieldChange}
-              autoComplete="off"
-              className="field"
-            />
-            <input 
-              type="tel" 
-              name="phone" 
-              placeholder="Phone"
-              value={this.state.phoneNumber}
-              onChange={this.onPhoneChange}
-              autoComplete="off"
-              className="field"
-            />
-            <input 
-              type="text" 
-              name="date" 
-              placeholder="Desired Date"
-              value={this.state.date}
-              onChange={this.onFieldChange}
-              autoComplete="off"
-              className="field"
-            />
-            <input 
-              type="text" 
-              name="course" 
-              placeholder="Dive Course"
-              value={this.state.course}
-              onChange={this.onFieldChange}
-              autoComplete="off"
-              className="field"
-            />
-            <button type="submit">
-              Send
-            </button>
-          </form>
+          {this.state.responseSuccess ? (
+              <div className="responseMessage">
+                <h4>{this.state.responseTitle}</h4>
+                <p>{this.state.responseDetails}</p>
+                <button onClick={this.clearResponse}>Close</button>
+              </div>
+            ):(
+            <form onSubmit={this.onInquirySubmit}>
+              <input 
+                type="text" 
+                name="firstName" 
+                placeholder="First Name" 
+                value={this.state.firstName}
+                onChange={this.onFieldChange}
+                autoComplete="off"
+                className="field"
+              />
+              <input 
+                type="text" 
+                name="lastName" 
+                placeholder="Last Name"
+                value={this.state.lastName}
+                onChange={this.onFieldChange}
+                autoComplete="off"
+                className="field"
+              />
+              <input 
+                type="email" 
+                name="email" 
+                placeholder="Email"
+                value={this.state.email}
+                onChange={this.onFieldChange}
+                autoComplete="off"
+                className="field"
+              />
+              <input 
+                type="tel" 
+                name="phone" 
+                placeholder="Phone"
+                value={this.state.phoneNumber}
+                onChange={this.onPhoneChange}
+                autoComplete="off"
+                className="field"
+              />
+              <input 
+                type="text" 
+                name="date" 
+                placeholder="Desired Date"
+                value={this.state.date}
+                onChange={this.onFieldChange}
+                autoComplete="off"
+                className="field"
+              />
+              <input 
+                type="text" 
+                name="course" 
+                placeholder="Dive Course"
+                value={this.state.course}
+                onChange={this.onFieldChange}
+                autoComplete="off"
+                className="field"
+              />
+              <button type="submit">
+                Send
+              </button>
+              {this.state.formMessage ? (
+                <div className="errorMessage">
+                  <p>{this.state.formMessage}</p>
+                </div>
+              ) : null}
+            </form>
+          )}
         </div>
       </section>
     );

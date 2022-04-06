@@ -30,8 +30,10 @@ app.post('/newsletter', function(req, res) {
 	})
 	.then((res) => { 
 		if(res.statusCode === 200) {
-			res.title = 'Successfully Subscribed';
-			res.detail = 'You have been successfully subscribed to The Scuba Instructor\'s newsletter';
+			res: {
+				title: 'Successfully Subscribed'
+				detail: 'You have been successfully subscribed to The Scuba Instructor\'s newsletter'
+			}
 		}
 		res.send(res);
 	})
@@ -52,29 +54,26 @@ var transporter = nodemailer.createTransport({
 	}
 });
 
+const handlebarOptions = {
+	viewEngine: {
+		extName: '.hbs',
+		partialsDir: 'client/app/src/partials',
+		layoutsDir: 'client/app/src/emails',
+		defaultLayout: '',
+	},
+	viewPath: 'client/app/src/emails',
+	extName: '.hbs',
+};
+
+transporter.use('compile', hbs(handlebarOptions));
+
 app.post('/submitRequest', function(req, res) {
 
-	// TODO: Make sure to send autoresponder to customer and instructor if not being handled by mailchimp
-
-	const handlebarOptions = {
-		viewEngine: {
-			extName: '.hbs',
-			partialsDir: 'client/app/src/partials',
-			layoutsDir: 'client/app/src/emails',
-			defaultLayout: '',
-		},
-		viewPath: 'client/app/src/emails',
-		extName: '.hbs',
-	};
-
-	transporter.use('compile', hbs(handlebarOptions));
-
-	// TODO: Change from email to sabina@thescubainstructor.com
-	const mailOptions = {
+	const staffEmail = {
 		from: 'The Scuba Instructor <kylebebeau@gmail.com>',
-	    to: req.body.email,
+	    to: 'kylebebeau@gmail.com',
 		subject: 'New Booking Inquiry',
-		template: 'inquiry',
+		template: 'staffInquiry',
 		context: { 
 			firstName: req.body.firstName,
 			lastName: req.body.lastName,
@@ -85,12 +84,42 @@ app.post('/submitRequest', function(req, res) {
 		}
 	};
 
-	transporter.sendMail(mailOptions, function(error, info){
-	  if (error) {
-		console.log(error);
-	  } else {
-	    console.log('Email sent: ' + info.response);
-	  }
+	const sendStaffAutoresponder = transporter.sendMail(staffEmail, function(err, info){
+		if (err) {
+		  	console.log("Staff autoresponder failed to send: "+err);
+		  	err.detail = 'There was an error with your submission. Email failed to send.';
+		} else {
+		    console.log('Staff autoresponder successfully sent: ' + info.response);
+		    res: {
+				title: 'Success!'
+				detail: 'Thank you for your interest in diving with The Scuba Instructor. We will reach out to you shortly to confirm your request and schedule your dive.'
+			}
+			mailchimp.post(`/lists/`+config.mailchimp.listID+`/members`, {
+				email_address: req.body.email,
+				status: 'subscribed',
+				merge_fields: {
+					EMAIL: req.body.email,
+					FNAME: req.body.firstName,
+					LNAME: req.body.lastName,
+					PHONE: req.body.phone,
+					COURSE: req.body.course,
+					INQUIRY: true
+				}
+			})
+			.then((res) => { 
+				if(res.statusCode === 200) {
+					console.log('Mailchimp subscribed: ' + req.body.email);
+					res: {
+						mailchimp: "Successfully subscribed inquiry submission email to newsletter list."
+					}
+				}
+				res.send(res);
+			})
+			.catch((err) => {
+				console.log(err);
+				res.send(err);
+			});
+		}
 	});
 
 });

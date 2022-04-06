@@ -34,16 +34,18 @@ class Faqs extends React.Component {
                   {faq.question}
                 </div>
                 <div className="answer">
-                  {faq.answer}
-                  {faq.bullets ? ( 
-                    <ul>
-                      {faq.bullets.map((data, index) => {
-                        return (
-                          <li key={index}>{data}</li>
-                        );
-                      })}
-                    </ul> 
-                  ): null }
+                  <div className="answerCopyWrap">
+                    {faq.answer}
+                    {faq.bullets ? ( 
+                      <ul>
+                        {faq.bullets.map((data, index) => {
+                          return (
+                            <li key={index}>{data}</li>
+                          );
+                        })}
+                      </ul> 
+                    ): null }
+                  </div>
                 </div>
               </li>
             ): null}
