@@ -33,15 +33,10 @@
     "build": "yarn --cwd client/app build",
     "server": "nodemon server.js",
     "client": "yarn --cwd client/app start",
+    "install": "concurrently \"yarn install\" \"yarn --cwd client/app install\"",
     "dev": "concurrently \"yarn run server\" \"yarn run client\" \"yarn run sass\"",
     "prod": "concurrently \"yarn run server\" \"yarn --cwd client/app start\"",
     "sass": "node-sass --watch client/app/src/assets/sass -o client/app/src/assets/css"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
   },
   "browserslist": {
     "production": [
