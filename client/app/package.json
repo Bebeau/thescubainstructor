@@ -2,7 +2,7 @@
   "name": "offthedock",
   "version": "1.0.0",
   "main": "index.js",
-  "homepage": "https://theinitgroup.com/offthedock/tsi",
+  "homepage": "https://thescubainstructor.vercel.app/",
   "repository": "https://github.com/Bebeau/offthedock",
   "author": "Kyle Bebeau",
   "license": "MIT",
@@ -20,12 +20,6 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
   },
   "browserslist": {
     "production": [
